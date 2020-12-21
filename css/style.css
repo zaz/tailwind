@@ -32,3 +32,15 @@
 .post-area a:hover {
   color: #0D0017;
 }
+
+
+#logo {
+  height: 41px
+}
+
+.navbar-brand {
+  display: inline
+}
+.navbar-brand img {
+  display: inline
+}
