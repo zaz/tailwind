@@ -44,3 +44,17 @@
 .navbar-brand img {
   display: inline
 }
+
+/* My additions */
+a {
+  color: inherit;
+  text-decoration: underline !important;
+}
+a:hover {
+  color: inherit;
+  text-shadow: 1px 0 0;
+}
+
+a.navbar-brand {
+  text-decoration: none !important;
+}
