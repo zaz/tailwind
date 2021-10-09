@@ -2,33 +2,6 @@
 // const exp = math.exp
 // const erf = math.erf
 
-// math.js does not have an inverse error function
-function erfinv(x){
-			let z
-			let a  = 0.147
-			let the_sign_of_x
-			if(0==x) {
-					the_sign_of_x = 0
-			} else if(x>0){
-					the_sign_of_x = 1
-			} else {
-					the_sign_of_x = -1
-			}
-
-			if(0 != x) {
-					let ln_1minus_x_sqrd = Math.log(1-x*x)
-					let ln_1minusxx_by_a = ln_1minus_x_sqrd / a
-					let ln_1minusxx_by_2 = ln_1minus_x_sqrd / 2
-					let ln_etc_by2_plus2 = ln_1minusxx_by_2 + (2/(Math.PI * a))
-					let first_sqrt = Math.sqrt((ln_etc_by2_plus2*ln_etc_by2_plus2)-ln_1minusxx_by_a)
-					let second_sqrt = Math.sqrt(first_sqrt - ln_etc_by2_plus2)
-					z = second_sqrt * the_sign_of_x
-			} else { // x is zero
-					z = 0
-			}
-	return z
-}
-
 // Estimates for stock market statistics:
 const rf = .00  // risk-free rate of return: ~= 2% - 2% fees = 0%
 const rp = .30  // risk premium
@@ -38,6 +11,33 @@ const vol = .45  // volatility
 const mu = math.log(1+r) - .5*math.log((vol/(1+r))**2+1)
 const sd = (math.log((vol/(1+r))**2+1))**.5
 const ts = [...Array(81)].map((_,i) => i/4)  // times (x-axis values)
+
+// math.js does not have an inverse error function
+function erfinv(x) {
+	let z
+	let a  = 0.147
+	let the_sign_of_x
+	if(0==x) {
+		the_sign_of_x = 0
+	} else if(x>0){
+		the_sign_of_x = 1
+	} else {
+		the_sign_of_x = -1
+	}
+
+	if(0 != x) {
+		let ln_1minus_x_sqrd = Math.log(1-x*x)
+		let ln_1minusxx_by_a = ln_1minus_x_sqrd / a
+		let ln_1minusxx_by_2 = ln_1minus_x_sqrd / 2
+		let ln_etc_by2_plus2 = ln_1minusxx_by_2 + (2/(Math.PI * a))
+		let first_sqrt = Math.sqrt((ln_etc_by2_plus2*ln_etc_by2_plus2)-ln_1minusxx_by_a)
+		let second_sqrt = Math.sqrt(first_sqrt - ln_etc_by2_plus2)
+		z = second_sqrt * the_sign_of_x
+	} else { // x is zero
+		z = 0
+	}
+	return z
+}
 
 const lnormc = (x, m=mu, s=sd) =>
 	// CDF(x) of lognormal(mean, standard deviation)
