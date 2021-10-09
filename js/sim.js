@@ -79,7 +79,7 @@ let chart = new Chart(ctx, {
 		},
 		scales: {
 			xAxes: [{
-				ticks: { fontSize: 20 },
+				ticks: { maxTicksLimit: 20, maxRotation: 0, fontSize: 20 },
 				scaleLabel: { display: true, labelString: "Time (years)", fontSize: 20 }
 			}],
 			yAxes: [{
