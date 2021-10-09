@@ -65,7 +65,7 @@ const max99 = (mu, v, t=1) => {
 $( () => {
 
 const ctx = document.getElementById("chart")
-let c = 500
+let c = 12*500
 let d = ts.map(t => c/r*(math.exp(r*t)-1))
 let chart = new Chart(ctx, {
 	type: 'line',
@@ -79,7 +79,7 @@ let chart = new Chart(ctx, {
 		},
 		scales: {
 			xAxes: [{
-				ticks: { maxTicksLimit: 20, maxRotation: 0, fontSize: 20 },
+				ticks: { ticks: 1, maxTicksLimit: 21, maxRotation: 0, fontSize: 20 },
 				scaleLabel: { display: true, labelString: "Time (years)", fontSize: 20 }
 			}],
 			yAxes: [{
@@ -91,7 +91,7 @@ let chart = new Chart(ctx, {
 })
 
 $("#contributions").change(function() {
-	let c = $("#contributions").val()
+	let c = 12*$("#contributions").val()
 	chart.data.datasets[0].data = ts.map(t => c/r*(math.exp(r*t)-1))
 	chart.update()
 })
