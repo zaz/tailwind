@@ -14,29 +14,14 @@ const ts = [...Array(81)].map((_,i) => i/4)  // times (x-axis values)
 
 // math.js does not have an inverse error function
 function erfinv(x) {
-	let z
-	let a  = 0.147
-	let the_sign_of_x
-	if(0==x) {
-		the_sign_of_x = 0
-	} else if(x>0){
-		the_sign_of_x = 1
-	} else {
-		the_sign_of_x = -1
-	}
+	// maximum relative error = .00013
+	const a  = 0.147
 
-	if(0 != x) {
-		let ln_1minus_x_sqrd = Math.log(1-x*x)
-		let ln_1minusxx_by_a = ln_1minus_x_sqrd / a
-		let ln_1minusxx_by_2 = ln_1minus_x_sqrd / 2
-		let ln_etc_by2_plus2 = ln_1minusxx_by_2 + (2/(Math.PI * a))
-		let first_sqrt = Math.sqrt((ln_etc_by2_plus2*ln_etc_by2_plus2)-ln_1minusxx_by_a)
-		let second_sqrt = Math.sqrt(first_sqrt - ln_etc_by2_plus2)
-		z = second_sqrt * the_sign_of_x
-	} else { // x is zero
-		z = 0
-	}
-	return z
+	if (0 == x) { return 0 }
+	const b = 2/(Math.PI * a) + Math.log(1-x**2)/2
+	const sqrt1 = Math.sqrt( b**2 - Math.log(1-x**2)/a )
+	const sqrt2 = Math.sqrt( sqrt1 - b )
+	return sqrt2 * Math.sign(x)
 }
 
 const lnormc = (x, m=mu, s=sd) =>
