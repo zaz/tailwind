@@ -8,16 +8,17 @@ const rp = .30  // risk premium
 const r = rf+rp
 const vol = .45  // volatility
 // If returns are a lognormal e^X, calculate mu, sd of X:
-const mu = math.log(1+r) - .5*math.log((vol/(1+r))**2+1)
 const sd = (math.log((vol/(1+r))**2+1))**.5
+const mu = math.log(1+r) - .5*sd**2
+const emu_1 = (1+r)*math.exp(-1*sd**2/2)-1
+console.assert(1+r == Math.exp(mu + sd**2/2))
+//console.assert(emu_1 == math.exp(mu)-1)
 const ts = [...Array(81)].map((_,i) => i/4)  // times (x-axis values)
 
 // math.js does not have an inverse error function
 function erfinv(x) {
 	// maximum relative error = .00013
 	const a  = 0.147
-
-	if (0 == x) { return 0 }
 	const b = 2/(Math.PI * a) + Math.log(1-x**2)/2
 	const sqrt1 = Math.sqrt( b**2 - Math.log(1-x**2)/a )
 	const sqrt2 = Math.sqrt( sqrt1 - b )
@@ -49,14 +50,24 @@ const max99 = (mu, v, t=1) => {
 
 $( () => {
 
+const updateChart = (c=12*500) => {
+	let means = ts.map(t => c/r*(math.exp(r*t)-1))
+	// error: returns increase as volatility increases
+	let means2 = ts.map(t => c/emu_1*(math.exp(emu_1*t)-1))
+	//let means2 = ts.map(t => c/mu*((1+r)**t-1))
+	//let means2 = ts.map(t => c/r*(math.exp((math.exp(mu+sd**2/2)-1)*t)-1))
+	let medians = ts.map(t => c/mu*(math.exp(mu*t)-1))
+	let medians2 = ts.map(t => c/mu*(math.exp(mu*t)-1))
+	chart.data.datasets = [ {data:means, label: "mean"}, {data:medians, borderColor: "lightblue"}, {data:means2} ]
+	//chart.data.datasets[0].data = ts.map(t => c/r*(math.exp(r*t)-1))
+	chart.update()
+}
+
 const ctx = document.getElementById("chart")
-let c = 12*500
-let d = ts.map(t => c/r*(math.exp(r*t)-1))
 let chart = new Chart(ctx, {
 	type: 'line',
 	data: {
-		labels: ts,
-		datasets: [ { data: d } ]
+		labels: ts
 	},
 	options: {
 		legend: {
@@ -74,11 +85,11 @@ let chart = new Chart(ctx, {
 		}
 	}
 })
+updateChart()
 
 $("#contributions").change(function() {
 	let c = 12*$("#contributions").val()
-	chart.data.datasets[0].data = ts.map(t => c/r*(math.exp(r*t)-1))
-	chart.update()
+	updateChart(c)
 })
 
 })
